@@ -34,8 +34,8 @@ RUN apt-get -y update && apt-get install -y \
     libps2000a
 
 # Pico repo
-RUN git clone --branch pulsing https://github.com/steingartlab/acoustics_hardware.git
-WORKDIR /acoustics_hardware
+RUN git clone --branch pulsing https://github.com/steingartlab/picoscope.git
+WORKDIR /picoscope
 RUN pip3 install -r requirements.txt
 
 ENTRYPOINT ["python3"]
