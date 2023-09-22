@@ -4,7 +4,7 @@ from boilerplate import Container, IP, Port, Usb, parse_port
 mux = Container(
     container_name='mux',
     image='nodeforwarder',
-    ip=IP.mux.value,
+    networks=IP.mux.value,
     ports=[parse_port(Port.mux)],
     environment=[
         f'serial_port=/dev/ttyUSB{Usb.mux.value}',
@@ -18,7 +18,7 @@ mux = Container(
 picoscope = Container(
     container_name='pico',
     image='pico',
-    ip=IP.picoscope.value,
+    networks=IP.picoscope.value,
     ports=[parse_port(Port.picoscope)],
     volumes=[
         '/dev/:/dev/',
@@ -30,7 +30,7 @@ picoscope = Container(
 pithy = Container(
     container_name='pithy',
     image='pithy',
-    ip=IP.pithy.value,
+    networks=IP.pithy.value,
     ports=['8001:8080', '8888:8888', '8004:8081'],  # Edge case so just doing manually
     volumes=[
         'docker.sock:/var/run/docker.sock',
@@ -48,11 +48,11 @@ pithy = Container(
 printer = Container(
     container_name='printer',
     image='nodeforwarder',
-    ip=IP.printer.value,
+    networks=IP.printer.value,
     ports=[parse_port(Port.printer)],
     environment=[
         f'serial_port=/dev/ttyUSB{Usb.printer.value}',
-        f'internet_port={IP.printer.value}',
+        f'internet_port={Port.printer.value}',
         'baud_rate=115200'
     ],
     volumes=['/dev/:/dev/']
@@ -63,11 +63,11 @@ printer = Container(
 pulser = Container(
     container_name='pulser',
     image='nodeforwarder',
-    ip=IP.pulser.value,  
+    networks=IP.pulser.value,  
     ports=[parse_port(Port.pulser)],
     environment=[
         f'serial_port=/dev/ttyUSB{Usb.pulser.value}',
-        f'internet_port={IP.pulser.value}',
+        f'internet_port={Port.pulser.value}',
         'baud_rate=9600'
     ],
     volumes=['/dev/:/dev/'] 
@@ -77,7 +77,7 @@ pulser = Container(
 remotecontrol = Container(
     container_name='remotecontrol',
     image='remotecontrol',
-    ip=IP.remotecontrol.value,
+    networks=IP.remotecontrol.value,
     ports=[parse_port(Port.remotecontrol)],
 )
     
@@ -85,7 +85,7 @@ remotecontrol = Container(
 sfogliatella = Container(
     container_name='sfogliatella',
     image='sfogliatella',
-    ip=IP.sfogliatella.value,
+    networks=IP.sfogliatella.value,
     ports=[parse_port(Port.sfogliatella)],
     volumes=['sfogliatella:/sfogliatella/']
 )
@@ -94,14 +94,14 @@ sfogliatella = Container(
 unplugged = Container(
     container_name='unplugged',
     image='unplugged',
-    ip=IP.unplugged.value,
+    networks=IP.unplugged.value,
     ports=[parse_port(Port.unplugged)],
 )
 
 ustreamer = Container(
     container_name='ustreamer',
     image='ustreamer',
-    ip=IP.ustreamer.value,
+    networks=IP.ustreamer.value,
     ports=[parse_port(Port.ustreamer)],
     volumes=['/dev/:/dev/']
 )

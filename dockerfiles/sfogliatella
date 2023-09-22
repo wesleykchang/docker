@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://github.com/steingartlab/sfogliatella.git
 WORKDIR /sfogliatella
-RUN pip3 install -r requirements.txt
+RUN pip3 install .
 
 ENTRYPOINT ["python3"]
-CMD ["server.py"]
+CMD ["app.py"]

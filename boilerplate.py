@@ -1,7 +1,7 @@
 """Enums to enforce unique usb IDs, IPs, and ports."""
 
+from aenum import Enum, unique
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Union
 
 
@@ -10,24 +10,25 @@ NETWORK_IP = '192.168.0'
 NETWORK_NAME = 'acoustics-network'
 
 
+@unique
 class Usb(Enum):
     pulser = 0
     printer = 1
     mux = 2
 
-
+@unique
 class IP(Enum):
     mux = 21
     picoscope = 10
     pithy = 9
-    printer = 21
-    pulser = 10
+    printer = 22
+    pulser = 11
     remotecontrol = 13
     sfogliatella = 12
-    unplugged = 11
+    unplugged = 15
     ustreamer = 14
 
-
+@unique
 class Port(Enum):
     """Pithy is not here bc it's a double edge case:
     1) multiple IPs bindings, and 2) doesn't do A:A binding but A:B.
@@ -35,7 +36,7 @@ class Port(Enum):
 
     mux = 9020
     picoscope = 5001
-    printer = 9020
+    printer = 9021
     pulser = 9002
     remotecontrol = 9003
     sfogliatella = 9696
@@ -47,7 +48,7 @@ class Port(Enum):
 class Container:
     container_name: str
     image: str
-    ip: Union[str, int]
+    networks: Union[str, int]
     ports: list = field(default_factory=list)
     volumes: list = field(default_factory=list)
     environment: list = field(default_factory=list)
@@ -58,7 +59,10 @@ class Container:
 
     def __post_init__(self):
         self.image = f'{DOCKERHUB_REPO}:{self.image}'
-        self.ip = f'{NETWORK_IP}.{self.ip}'
+        networks = {}
+        networks[NETWORK_NAME] = {}
+        networks[NETWORK_NAME]["ipv4_address"] = f'{NETWORK_IP}.{self.networks}'
+        self.networks = networks
 
     def volume_declaration(self):
         """Parses volumes to be used in docker-compose.yaml.
