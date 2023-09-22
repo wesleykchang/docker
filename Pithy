@@ -1,0 +1,34 @@
+FROM ubuntu:20.04
+
+#Timezone Set
+ENV TZ=America/New_York
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+RUN apt-get -y update && apt-get install -y \
+    apt-utils \
+    autoconf \
+    autogen \
+    build-essential \
+    git \
+    libsasl2-dev \
+    libssl-dev \
+    libtool \
+    nodejs \
+    npm \
+    openssl \
+    psmisc \
+    python3 \
+    python3-pip \
+    tzdata \
+    yasm
+
+RUN git clone https://github.com/dansteingart/pithy
+WORKDIR /pithy
+
+RUN npm install
+
+RUN git clone --branch master https://github.com/steingartlab/control.git
+RUN pip3 install -r requirements.txt
+
+ENTRYPOINT ["bash"]
+CMD ["start.sh"]

@@ -1,0 +1,154 @@
+"version": "3"
+services:
+  pithy:
+    container_name: pithy
+    image: steingartlab/easi:pithy
+    ports:
+      - 8001:8080
+      - 8888:8888
+      - 8004:8081
+    volumes:
+      - docker.sock:/var/run/docker.sock
+      - code:/pithy/code/
+      - history:/pithy/code_stamped/
+      - passwd:/pithy/assets/
+      - files:/pithy/files/
+      - images:/pithy/images/
+      - drops:/pithy/drops/
+      - /home/lab/acoustics:/pithy/acoustics
+    privileged: true
+    tty: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.9
+
+  sfogliatella:
+    container_name: sfogliatella
+    image: steingartlab/easi:sfogliatella
+    ports:
+      - 9696:9696
+    volumes:
+      - /home/lab/squidstat:/sfogliatella/data
+    privileged: true
+    tty: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.9
+
+  pico:
+    container_name: pico
+    image: steingartlab/easi:pico
+    ports:
+      - 5001:5001
+    volumes:
+      - /dev/:/dev/
+      - acoustics_hardware:/acoustics_hardware/
+    restart: on-failure:10
+    privileged: true
+    tty: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.10
+
+  pulser:
+    container_name: pulser
+    image: steingartlab/easi:nodeforwarder
+    ports:
+      - 9002:9002
+    environment:
+      - serial_port=/dev/ttyUSB0
+      - internet_port=9002
+      - baud_rate=9600
+    volumes:
+      - /dev/:/dev/
+    privileged: true
+    tty: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.20
+
+  printer:
+    container_name: printer
+    image: steingartlab/easi:nodeforwarder
+    ports:
+      - 9020:9020
+    environment:
+      - serial_port=/dev/ttyUSB1
+      - internet_port=9020
+      - baud_rate=115200
+    volumes:
+      - /dev/:/dev/
+    privileged: true
+    tty: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.21
+
+  mux:
+    container_name: mux
+    image: steingartlab/easi:nodeforwarder
+    ports:
+      - 9004:9004
+    environment:
+      - serial_port=/dev/ttyUSB2
+      - internet_port=9004
+      - baud_rate=9600
+    volumes:
+      - /dev/:/dev/
+    privileged: true
+    tty: true
+    stdin_open: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.22
+
+  webcam_horizontal:
+    container_name: webcam_horizontal
+    image: steingartlab/easi:webcam
+    ports:
+      - 8080:8080
+    environment:
+      - serial_port=/dev/video0
+    volumes:
+      - /dev/:/dev/
+    privileged: true
+    tty: true
+    stdin_open: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.23
+
+  webcam_vertical:
+    container_name: webcam_vertical
+    image: steingartlab/easi:webcam
+    ports:
+      - 8080:8080
+    environment:
+      - serial_port=/dev/video0
+    volumes:
+      - /dev/:/dev/
+    privileged: true
+    tty: true
+    stdin_open: true
+    networks:
+      acoustics-network:
+        ipv4_address: 192.168.0.24
+
+volumes:
+  docker.sock:
+  code:
+  history:
+  passwd:
+  files:
+  images:
+  drops:
+  acoustics:
+  acoustics_hardware:
+  sfogliatella:
+
+
+networks:
+  acoustics-network:
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
