@@ -26,7 +26,8 @@ class IP(Enum):
     remotecontrol = 13
     sfogliatella = 12
     unplugged = 15
-    ustreamer = 14
+    ustreamer_horizontal = 14
+    ustreamer_vertical = 16
 
 @unique
 class Port(Enum):
@@ -41,7 +42,8 @@ class Port(Enum):
     remotecontrol = 9003
     sfogliatella = 9696
     unplugged = 9001
-    ustreamer = 8080
+    ustreamer_vertical = 8080
+    ustreamer_horizontal = 8081
 
 
 @dataclass
@@ -78,7 +80,11 @@ class Container:
             volume_containerside = volume.split(':')[0]
 
             if volume_containerside[0] == '/':
-                continue
+                if 'home' in volume_containerside:
+                    volume_containerside = volume.split('/')[-2]
+                    print(volume_containerside)
+                else:
+                    continue
 
             volumes.append(volume_containerside)
 

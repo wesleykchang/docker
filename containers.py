@@ -87,7 +87,10 @@ sfogliatella = Container(
     image='sfogliatella',
     networks=IP.sfogliatella.value,
     ports=[parse_port(Port.sfogliatella)],
-    volumes=['sfogliatella:/sfogliatella/']
+    volumes=[
+        'sfogliatella:/sfogliatella/',
+        '/home/lab/squidward:/sfogliatella/data/'
+    ]
 )
 
 
@@ -98,14 +101,30 @@ unplugged = Container(
     ports=[parse_port(Port.unplugged)],
 )
 
-ustreamer = Container(
-    container_name='ustreamer',
+ustreamer_vertical = Container(
+    container_name='ustreamer_vertical',
     image='ustreamer',
-    networks=IP.ustreamer.value,
-    ports=[parse_port(Port.ustreamer)],
-    volumes=['/dev/:/dev/']
+    networks=IP.ustreamer_vertical.value,
+    ports=[parse_port(Port.ustreamer_vertical)],
+    volumes=['/dev/:/dev/'],
+    environment=[
+        f'device=/dev/video0',
+        f'port={Port.ustreamer_vertical.value}',
+    ],
 )
-    
+
+ustreamer_horizontal = Container(
+    container_name='ustreamer_horizontal',
+    image='ustreamer',
+    networks=IP.ustreamer_horizontal.value,
+    ports=[parse_port(Port.ustreamer_horizontal)],
+    volumes=['/dev/:/dev/'],
+    environment=[
+        f'device=/dev/video2',
+        f'port={Port.ustreamer_horizontal.value}',
+    ],
+)
+
 
 containers: tuple[Container, ...] = (
     mux,
@@ -116,5 +135,6 @@ containers: tuple[Container, ...] = (
     remotecontrol,
     sfogliatella, 
     unplugged,
-    ustreamer
+    ustreamer_vertical,
+    ustreamer_horizontal
 )
