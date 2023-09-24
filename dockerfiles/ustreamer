@@ -2,8 +2,8 @@ FROM ubuntu:latest
 
 # NOTE: These default values (for pulser) can be overwritten using 'command' in docker-compose.yaml
 ENV device=/dev/video0
-ENV host=0.0.0.0
 ENV port=8080
+ENV input=0
 
 RUN apt-get update -y && apt-get install -y \
     build-essential \
@@ -17,4 +17,4 @@ WORKDIR /ustreamer
 RUN make
 RUN ./ustreamer --help
 
-CMD ["/bin/bash", "-l", "-c", "./ustreamer --host=$host --device=$device --port=$port"]
+CMD ["/bin/bash", "-l", "-c", "./ustreamer --host=0.0.0.0 --input=$input --buffers=2 --workers=2 --device=$device --port=$port"]

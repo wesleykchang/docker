@@ -16,8 +16,8 @@ mux = Container(
 
     
 picoscope = Container(
-    container_name='pico',
-    image='pico',
+    container_name='picoscope',
+    image='picoscope',
     networks=IP.picoscope.value,
     ports=[parse_port(Port.picoscope)],
     volumes=[
@@ -89,7 +89,7 @@ sfogliatella = Container(
     ports=[parse_port(Port.sfogliatella)],
     volumes=[
         'sfogliatella:/sfogliatella/',
-        '/home/lab/squidward:/sfogliatella/data/'
+        '/home/lab/squidstat:/sfogliatella/data/'
     ]
 )
 
@@ -110,6 +110,7 @@ ustreamer_vertical = Container(
     environment=[
         f'device=/dev/video0',
         f'port={Port.ustreamer_vertical.value}',
+        'input=0'
     ],
 )
 
@@ -122,6 +123,7 @@ ustreamer_horizontal = Container(
     environment=[
         f'device=/dev/video2',
         f'port={Port.ustreamer_horizontal.value}',
+        'input=1'
     ],
 )
 
